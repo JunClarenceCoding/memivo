@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../database/database_helper.dart';
+import 'package:memivo/core/constants/app_colors.dart';
+import '../../core/services/database_helper.dart';
 import '../../models/birthday_model.dart';
 import 'birthday_form_popup.dart';
 
@@ -32,7 +33,7 @@ class BirthdayDetailPopup extends StatelessWidget {
       (today.month == bday.month && today.day < bday.day)) {
         age--;
     }
-    return age + 1;
+    return age;
   }
 
   @override
@@ -53,7 +54,7 @@ class BirthdayDetailPopup extends StatelessWidget {
           Container(
             width: 48, height: 4,
             decoration:  BoxDecoration(
-              color:  const Color(0xFFF9C6E0),
+              color:  AppColors.birthdayIcon,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -62,7 +63,7 @@ class BirthdayDetailPopup extends StatelessWidget {
           //Avatar
           CircleAvatar(
             radius: 36,
-            backgroundColor: const Color(0xFFF9C6E0),
+            backgroundColor: AppColors.birthdayIcon,
             backgroundImage: birthday.photoPath != null
                 ? FileImage(File(birthday.photoPath!))
                 : null,
@@ -71,7 +72,7 @@ class BirthdayDetailPopup extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF8B2D5E),
+                      color: AppColors.birthdayText,
                     ),)
                 : null,
           ),
@@ -82,7 +83,7 @@ class BirthdayDetailPopup extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF8B2D5E),
+              color: AppColors.birthdayText,
             ),
           ),
           const SizedBox(height: 2,),
@@ -90,7 +91,7 @@ class BirthdayDetailPopup extends StatelessWidget {
             birthday.relationship,
             style: const TextStyle(
               fontSize: 13,
-              color: Color(0xFFC4689A),
+              color: AppColors.birthdaySubtext,
             ),
           ),
           const SizedBox(height: 14,),
@@ -100,7 +101,7 @@ class BirthdayDetailPopup extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color:  const Color(0xFFE91E8C),
+              color:  AppColors.birthdayPrimary,
               borderRadius:  BorderRadius.circular(14),
             ),
             child: Column(
@@ -127,7 +128,7 @@ class BirthdayDetailPopup extends StatelessWidget {
           const SizedBox(height: 14,),
 
           //Details
-          _detailRow('Age this year', '$_ageThisYear years old'),
+          _detailRow('Current age', '$_ageThisYear years old'),
           _detailRow('Birthday', formatted),
           if (birthday.notes != null  && birthday.notes!.isNotEmpty)
             _detailRow('Notes', birthday.notes!),
@@ -154,7 +155,7 @@ class BirthdayDetailPopup extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 13),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF0FAF2),
+                      color: AppColors.editBackground,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: const Center(
@@ -163,7 +164,7 @@ class BirthdayDetailPopup extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF2A5E35),
+                          color: AppColors.editText,
                         ),
                       ),
                     ),
@@ -181,7 +182,7 @@ class BirthdayDetailPopup extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 13),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFCEBEB),
+                      color: AppColors.deleteBackground,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: const Center(
@@ -190,7 +191,7 @@ class BirthdayDetailPopup extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFFA32D2D),
+                          color: AppColors.deleteText,
                         ),
                       ),
                     ),
@@ -213,7 +214,7 @@ class BirthdayDetailPopup extends StatelessWidget {
           Text(
             label,
             style: const TextStyle(
-              fontSize: 13, color: Color(0xFFA32D2D),
+              fontSize: 13, color: AppColors.deleteText,
             ),
           ),
           Text(
@@ -221,7 +222,7 @@ class BirthdayDetailPopup extends StatelessWidget {
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF8B2D5E),
+              color: AppColors.birthdayText,
             ),
           ),
         ],

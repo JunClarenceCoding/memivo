@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../database/database_helper.dart';
+import 'package:memivo/core/constants/app_colors.dart';
+import '../../core/services/database_helper.dart';
 import '../../models/cafe_model.dart';
 import 'cafe_form_popup.dart';
 
@@ -42,7 +43,7 @@ class CafeDetailPopup extends StatelessWidget {
           Container(
             width: 40, height: 4,
             decoration: BoxDecoration(
-              color: const Color(0xFFF5DFB0),
+              color: AppColors.cafeBorder,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -54,7 +55,7 @@ class CafeDetailPopup extends StatelessWidget {
               Container(
                 width: 56, height: 56,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5DFB0),
+                  color: AppColors.cafeBorder,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 clipBehavior: Clip.antiAlias,
@@ -76,13 +77,13 @@ class CafeDetailPopup extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF6B4200),
+                          color: AppColors.cafeText,
                         )),
                     const SizedBox(height: 2),
                     Text(
                       '${cafe.cafeName} · ${cafe.drinkType}',
                       style: const TextStyle(
-                          fontSize: 12, color: Color(0xFFB07A30)),
+                          fontSize: 12, color: AppColors.cafeSubtext),
                     ),
                   ],
                 ),
@@ -98,7 +99,7 @@ class CafeDetailPopup extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFFFFF8EE),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFF5DFB0)),
+              border: Border.all(color: AppColors.cafeBorder),
             ),
             child: Column(
               children: [
@@ -107,7 +108,7 @@ class CafeDetailPopup extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text('${cafe.rating} out of 5 stars',
                     style: const TextStyle(
-                        fontSize: 11, color: Color(0xFFB07A30))),
+                        fontSize: 11, color: AppColors.cafeSubtext)),
               ],
             ),
           ),
@@ -145,7 +146,7 @@ class CafeDetailPopup extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 13),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF0FAF2),
+                      color: AppColors.editBackground,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: const Center(
@@ -153,7 +154,7 @@ class CafeDetailPopup extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFF2A5E35),
+                            color: AppColors.editText,
                           )),
                     ),
                   ),
@@ -170,7 +171,7 @@ class CafeDetailPopup extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 13),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFCEBEB),
+                      color: AppColors.deleteBackground,
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: const Center(
@@ -178,7 +179,7 @@ class CafeDetailPopup extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: Color(0xFFA32D2D),
+                            color: AppColors.deleteText,
                           )),
                     ),
                   ),
@@ -202,21 +203,21 @@ class CafeDetailPopup extends StatelessWidget {
             children: [
               Text(label,
                   style: const TextStyle(
-                      fontSize: 13, color: Color(0xFFB07A30))),
+                      fontSize: 13, color: AppColors.cafeSubtext)),
               Flexible(
                 child: Text(value,
                     textAlign: TextAlign.right,
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF6B4200),
+                      color: AppColors.cafeText,
                     )),
               ),
             ],
           ),
         ),
         if (!isLast)
-          Container(height: 0.5, color: const Color(0xFFF5DFB0)),
+          Container(height: 0.5, color: AppColors.cafeBorder),
       ],
     );
   }

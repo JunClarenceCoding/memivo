@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:memivo/core/constants/app_colors.dart';
 import 'package:intl/intl.dart';
-import '../../database/database_helper.dart';
+import '../../core/services/database_helper.dart';
 import '../../models/cafe_model.dart';
 
 class CafeFormPopup extends StatefulWidget {
@@ -129,7 +130,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
               Container(
                 width: 40, height: 4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF5DFB0),
+                  color: AppColors.cafeBorder,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -139,7 +140,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF6B4200),
+                    color: AppColors.cafeText,
                   )),
               const SizedBox(height: 16),
 
@@ -152,10 +153,10 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                     child: Container(
                       width: 54, height: 54,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF5DFB0),
+                        color: AppColors.cafeBorder,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: const Color(0xFFB07A30),
+                          color: AppColors.cafeSubtext,
                           style: BorderStyle.solid,
                           width: 1.5,
                         ),
@@ -166,7 +167,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                               fit: BoxFit.cover)
                           : const Center(
                               child: Icon(Icons.camera_alt_rounded,
-                                  color: Color(0xFFB07A30), size: 22)),
+                                  color: AppColors.cafeSubtext, size: 22)),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -176,7 +177,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                       child: TextField(
                         controller: _drinkNameController,
                         style: const TextStyle(
-                            fontSize: 13, color: Color(0xFF6B4200)),
+                            fontSize: 13, color: AppColors.cafeText),
                         decoration:
                             _inputDecoration('e.g. Caramel Macchiato'),
                       ),
@@ -192,7 +193,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                 child: TextField(
                   controller: _cafeNameController,
                   style: const TextStyle(
-                      fontSize: 13, color: Color(0xFF6B4200)),
+                      fontSize: 13, color: AppColors.cafeText),
                   decoration: _inputDecoration('e.g. Starbucks'),
                 ),
               ),
@@ -215,12 +216,12 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                         decoration: BoxDecoration(
                           color: isSelected
                               ? const Color(0xFFFFF3E0)
-                              : const Color(0xFFFFF8EE),
+                              : AppColors.cafeBackground,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: isSelected
-                                ? const Color(0xFFBA7517)
-                                : const Color(0xFFF5DFB0),
+                                ? AppColors.cafePrimary
+                                : AppColors.cafeBorder,
                             width: isSelected ? 1.5 : 1,
                           ),
                         ),
@@ -233,7 +234,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                                 : FontWeight.normal,
                             color: isSelected
                                 ? const Color(0xFFBA7517)
-                                : const Color(0xFF6B4200),
+                                : AppColors.cafeText,
                           ),
                         ),
                       ),
@@ -249,9 +250,9 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFF8EE),
+                    color: AppColors.cafeBackground,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFF5DFB0)),
+                    border: Border.all(color: AppColors.cafeBorder),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -285,7 +286,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                         controller: _priceController,
                         keyboardType: TextInputType.number,
                         style: const TextStyle(
-                            fontSize: 13, color: Color(0xFF6B4200)),
+                            fontSize: 13, color: AppColors.cafeText),
                         decoration: _inputDecoration('0.00'),
                       ),
                     ),
@@ -300,10 +301,10 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFF8EE),
+                            color: AppColors.cafeBackground,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                                color: const Color(0xFFF5DFB0)),
+                                color: AppColors.cafeBorder),
                           ),
                           child: Row(
                             children: [
@@ -316,8 +317,8 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: _date == null
-                                        ? const Color(0xFFB07A30)
-                                        : const Color(0xFF6B4200),
+                                        ? AppColors.cafeSubtext
+                                        : AppColors.cafeText,
                                   ),
                                 ),
                               ),
@@ -328,13 +329,13 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                                   child: const Icon(
                                       Icons.close_rounded,
                                       size: 14,
-                                      color: Color(0xFFB07A30)),
+                                      color: AppColors.cafeSubtext),
                                 )
                               else
                                 const Icon(
                                     Icons.calendar_today_rounded,
                                     size: 13,
-                                    color: Color(0xFFB07A30)),
+                                    color: AppColors.cafeSubtext),
                             ],
                           ),
                         ),
@@ -351,7 +352,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                 child: TextField(
                   controller: _locationController,
                   style: const TextStyle(
-                      fontSize: 13, color: Color(0xFF6B4200)),
+                      fontSize: 13, color: AppColors.cafeText),
                   decoration: _inputDecoration('e.g. BGC, Taguig'),
                 ),
               ),
@@ -364,7 +365,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                   controller: _notesController,
                   maxLines: 2,
                   style: const TextStyle(
-                      fontSize: 13, color: Color(0xFF6B4200)),
+                      fontSize: 13, color: AppColors.cafeText),
                   decoration: _inputDecoration('e.g. So creamy!'),
                 ),
               ),
@@ -377,12 +378,12 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                     horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: _errorMessage != null
-                      ? const Color(0xFFFCEBEB)
+                      ? AppColors.deleteBackground
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: _errorMessage != null
-                        ? const Color(0xFFE24B4A)
+                        ? AppColors.errorBorder
                         : Colors.transparent,
                   ),
                 ),
@@ -390,7 +391,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                   children: [
                     Icon(Icons.info_rounded,
                         color: _errorMessage != null
-                            ? const Color(0xFFA32D2D)
+                            ? AppColors.deleteText
                             : Colors.transparent,
                         size: 15),
                     const SizedBox(width: 8),
@@ -400,7 +401,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                         style: TextStyle(
                           fontSize: 12,
                           color: _errorMessage != null
-                              ? const Color(0xFFA32D2D)
+                              ? AppColors.deleteText
                               : Colors.transparent,
                         ),
                       ),
@@ -417,7 +418,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFBA7517),
+                    color: AppColors.cafePrimary,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Center(
@@ -445,7 +446,7 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
       children: [
         Text(label,
             style: const TextStyle(
-                fontSize: 11, color: Color(0xFFB07A30))),
+                fontSize: 11, color: AppColors.cafeSubtext)),
         const SizedBox(height: 4),
         child,
       ],
@@ -456,22 +457,22 @@ class _CafeFormPopupState extends State<CafeFormPopup> {
     return InputDecoration(
       hintText: hint,
       hintStyle:
-          const TextStyle(fontSize: 13, color: Color(0xFFB07A30)),
+          const TextStyle(fontSize: 13, color: AppColors.cafeSubtext),
       filled: true,
-      fillColor: const Color(0xFFFFF8EE),
+      fillColor: AppColors.cafeBackground,
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFF5DFB0)),
+        borderSide: const BorderSide(color: AppColors.cafeBorder),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFF5DFB0)),
+        borderSide: const BorderSide(color: AppColors.cafeBorder),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFBA7517)),
+        borderSide: const BorderSide(color: AppColors.cafePrimary),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../database/database_helper.dart';
+import 'package:memivo/core/constants/app_colors.dart';
+import '../../core/services/database_helper.dart';
 import '../../models/todo_model.dart';
 
 class TodoFormPopup extends StatefulWidget {
@@ -99,7 +100,7 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF2A5E35),
+                    color: AppColors.todoText,
                   )),
               const SizedBox(height: 16),
 
@@ -109,7 +110,7 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                 child: TextField(
                   controller: _titleController,
                   style: const TextStyle(
-                      fontSize: 13, color: Color(0xFF2A5E35)),
+                      fontSize: 13, color: AppColors.todoText),
                   decoration: _inputDecoration('Enter task title...'),
                 ),
               ),
@@ -124,9 +125,9 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF0FAF2),
+                      color: AppColors.todoBackground,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFC8EDD0)),
+                      border: Border.all(color: AppColors.todoBorder),
                     ),
                     child: Row(
                       children: [
@@ -139,8 +140,8 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                             style: TextStyle(
                               fontSize: 13,
                               color: _dueDate == null
-                                  ? const Color(0xFF5A9E67)
-                                  : const Color(0xFF2A5E35),
+                                  ? AppColors.todoSubtext
+                                  : AppColors.todoText,
                             ),
                           ),
                         ),
@@ -150,12 +151,12 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                                 setState(() => _dueDate = null),
                             child: const Icon(Icons.close_rounded,
                                 size: 16,
-                                color: Color(0xFF5A9E67)),
+                                color: AppColors.todoSubtext),
                           )
                         else
                           const Icon(Icons.calendar_today_rounded,
                               size: 14,
-                              color: Color(0xFF5A9E67)),
+                              color: AppColors.todoSubtext),
                       ],
                     ),
                   ),
@@ -172,7 +173,7 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                     final color = p == 'High'
                         ? const Color(0xFFE24B4A)
                         : p == 'Medium'
-                            ? const Color(0xFFB07A30)
+                            ? AppColors.cafeSubtext
                             : const Color(0xFF6A3BAF);
                     final emoji =
                         p == 'High' ? '🔴' : p == 'Medium' ? '🟡' : '🟣';
@@ -221,12 +222,12 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                     horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: _errorMessage != null
-                      ? const Color(0xFFFCEBEB)
+                      ? AppColors.deleteBackground
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: _errorMessage != null
-                        ? const Color(0xFFE24B4A)
+                        ? AppColors.errorBorder
                         : Colors.transparent,
                   ),
                 ),
@@ -234,7 +235,7 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                   children: [
                     Icon(Icons.info_rounded,
                         color: _errorMessage != null
-                            ? const Color(0xFFA32D2D)
+                            ? AppColors.deleteText
                             : Colors.transparent,
                         size: 15),
                     const SizedBox(width: 8),
@@ -244,7 +245,7 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                         style: TextStyle(
                           fontSize: 12,
                           color: _errorMessage != null
-                              ? const Color(0xFFA32D2D)
+                              ? AppColors.deleteText
                               : Colors.transparent,
                         ),
                       ),
@@ -261,7 +262,7 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF639922),
+                    color: AppColors.todoPrimary,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Center(
@@ -289,7 +290,7 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
       children: [
         Text(label,
             style: const TextStyle(
-                fontSize: 11, color: Color(0xFF5A9E67))),
+                fontSize: 11, color: AppColors.todoSubtext)),
         const SizedBox(height: 4),
         child,
       ],
@@ -300,22 +301,22 @@ class _TodoFormPopupState extends State<TodoFormPopup> {
     return InputDecoration(
       hintText: hint,
       hintStyle:
-          const TextStyle(fontSize: 13, color: Color(0xFF5A9E67)),
+          const TextStyle(fontSize: 13, color: AppColors.todoSubtext),
       filled: true,
       fillColor: const Color(0xFFF0FAF2),
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFC8EDD0)),
+        borderSide: const BorderSide(color: AppColors.todoBorder),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFC8EDD0)),
+        borderSide: const BorderSide(color: AppColors.todoBorder),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF639922)),
+        borderSide: const BorderSide(color: AppColors.todoPrimary),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../database/database_helper.dart';
+import 'package:memivo/core/constants/app_colors.dart';
+import '../../core/services/database_helper.dart';
 import '../../models/todo_model.dart';
 import 'todo_form_popup.dart';
 
@@ -53,20 +54,20 @@ class _TodoScreenState extends State<TodoScreen> {
             style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFF2A5E35))),
+                color: AppColors.todoText)),
         content: Text(
           'Are you sure you want to mark "${todo.title}" as done?',
-          style: const TextStyle(fontSize: 13, color: Color(0xFF5A9E67)),
+          style: const TextStyle(fontSize: 13, color: AppColors.todoSubtext),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: const Text('Cancel',
-                style: TextStyle(color: Color(0xFF5A9E67))),
+                style: TextStyle(color: AppColors.todoSubtext)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF639922),
+              backgroundColor: AppColors.todoPrimary,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
             ),
@@ -117,7 +118,7 @@ class _TodoScreenState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0FAF2),
+      backgroundColor: AppColors.todoBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -136,7 +137,7 @@ class _TodoScreenState extends State<TodoScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.chevron_left_rounded,
-                          color: Color(0xFF5A9E67)),
+                          color: AppColors.todoSubtext),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -144,7 +145,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF2A5E35),
+                        color: AppColors.todoText,
                       )),
                 ],
               ),
@@ -158,7 +159,7 @@ class _TodoScreenState extends State<TodoScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFC8EDD0)),
+                  border: Border.all(color: AppColors.todoBorder),
                 ),
                 child: Row(
                   children: [
@@ -181,7 +182,7 @@ class _TodoScreenState extends State<TodoScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddPopup,
-        backgroundColor: const Color(0xFF639922),
+        backgroundColor: AppColors.todoPrimary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16)),
         child: const Icon(Icons.add_rounded, color: Colors.white),
@@ -198,7 +199,7 @@ class _TodoScreenState extends State<TodoScreen> {
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             color: isActive
-                ? const Color(0xFF639922)
+                ? AppColors.todoPrimary
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(9),
           ),
@@ -209,7 +210,7 @@ class _TodoScreenState extends State<TodoScreen> {
                   fontWeight: FontWeight.w600,
                   color: isActive
                       ? Colors.white
-                      : const Color(0xFF5A9E67),
+                      : AppColors.todoSubtext,
                 )),
           ),
         ),
@@ -222,7 +223,7 @@ class _TodoScreenState extends State<TodoScreen> {
       return const Center(
         child: Text('No pending tasks!\nTap + to add one.',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15, color: Color(0xFF5A9E67))),
+            style: TextStyle(fontSize: 15, color: AppColors.todoSubtext)),
       );
     }
 
@@ -256,7 +257,7 @@ class _TodoScreenState extends State<TodoScreen> {
       return const Center(
         child: Text('No completed tasks yet!',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15, color: Color(0xFF5A9E67))),
+            style: TextStyle(fontSize: 15, color: AppColors.todoSubtext)),
       );
     }
 
@@ -289,7 +290,7 @@ class _TodoScreenState extends State<TodoScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFC8EDD0)),
+        border: Border.all(color: AppColors.todoBorder),
       ),
       child: Row(
         children: [
@@ -322,7 +323,7 @@ class _TodoScreenState extends State<TodoScreen> {
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF2A5E35),
+                      color: AppColors.todoText,
                     )),
                 const SizedBox(height: 2),
                 Text(
@@ -330,7 +331,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       ? 'Due: ${DateFormat('MMM dd, yyyy').format(DateTime.parse(todo.dueDate!))}'
                       : 'No due date',
                   style: const TextStyle(
-                      fontSize: 10, color: Color(0xFF5A9E67)),
+                      fontSize: 10, color: AppColors.todoSubtext),
                 ),
               ],
             ),
@@ -343,11 +344,11 @@ class _TodoScreenState extends State<TodoScreen> {
               width: 28, height: 28,
               margin: const EdgeInsets.only(right: 6),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0FAF2),
+                color: AppColors.todoBackground,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.edit_rounded,
-                  size: 14, color: Color(0xFF5A9E67)),
+                  size: 14, color: AppColors.todoSubtext),
             ),
           ),
 
@@ -357,11 +358,11 @@ class _TodoScreenState extends State<TodoScreen> {
             child: Container(
               width: 28, height: 28,
               decoration: BoxDecoration(
-                color: const Color(0xFFFCEBEB),
+                color: AppColors.deleteBackground,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.delete_rounded,
-                  size: 14, color: Color(0xFFE24B4A)),
+                  size: 14, color: AppColors.errorBorder),
             ),
           ),
         ],
@@ -376,7 +377,7 @@ class _TodoScreenState extends State<TodoScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFC8EDD0)),
+        border: Border.all(color: AppColors.todoBorder),
       ),
       child: Row(
         children: [
@@ -384,7 +385,7 @@ class _TodoScreenState extends State<TodoScreen> {
           Container(
             width: 22, height: 22,
             decoration: BoxDecoration(
-              color: const Color(0xFF5A9E67),
+              color: AppColors.todoSubtext,
               borderRadius: BorderRadius.circular(6),
             ),
             child: const Icon(Icons.check_rounded,
@@ -403,14 +404,14 @@ class _TodoScreenState extends State<TodoScreen> {
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF2A5E35),
+                        color: AppColors.todoText,
                         decoration: TextDecoration.lineThrough,
                       )),
                   const SizedBox(height: 2),
                   Text(
                     '${todo.priority == 'High' ? '🔴' : todo.priority == 'Medium' ? '🟡' : '🟣'} ${todo.priority}',
                     style: const TextStyle(
-                        fontSize: 10, color: Color(0xFF5A9E67)),
+                        fontSize: 10, color: AppColors.todoSubtext),
                   ),
                 ],
               ),
@@ -423,11 +424,11 @@ class _TodoScreenState extends State<TodoScreen> {
             child: Container(
               width: 28, height: 28,
               decoration: BoxDecoration(
-                color: const Color(0xFFFCEBEB),
+                color: AppColors.deleteBackground,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.delete_rounded,
-                  size: 14, color: Color(0xFFE24B4A)),
+                  size: 14, color: AppColors.errorBorder),
             ),
           ),
         ],

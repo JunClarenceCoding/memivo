@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../database/database_helper.dart';
+import 'package:memivo/core/constants/app_colors.dart';
+import 'package:memivo/core/utils/date_utils.dart';
+import '../../core/services/database_helper.dart';
 import '../../models/birthday_model.dart';
 import 'birthday_form_popup.dart';
 import 'birthday_detail_popup.dart';
@@ -26,27 +28,27 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
     final data = await DatabaseHelper.instance.getAllBirthdays();
     // Sort by days until birthday
     data.sort((a, b) =>
-        _daysUntil(a.birthdate).compareTo(_daysUntil(b.birthdate)));
+        AppDateUtils.daysUntilBirthday(a.birthdate).compareTo(AppDateUtils.daysUntilBirthday(b.birthdate)));
     setState(() => _birthdays = data);
   }
 
-  int _daysUntil(String birthdate) {
-    final today = DateTime.now();
-    final bday = DateTime.parse(birthdate);
-    var next = DateTime(today.year, bday.month, bday.day);
-    if (next.isBefore(DateTime(today.year, today.month, today.day))) {
-      next = DateTime(today.year + 1, bday.month, bday.day);
-    }
-    return next
-        .difference(DateTime(today.year, today.month, today.day))
-        .inDays;
-  }
+  // int _daysUntil(String birthdate) {
+  //   final today = DateTime.now();
+  //   final bday = DateTime.parse(birthdate);
+  //   var next = DateTime(today.year, bday.month, bday.day);
+  //   if (next.isBefore(DateTime(today.year, today.month, today.day))) {
+  //     next = DateTime(today.year + 1, bday.month, bday.day);
+  //   }
+  //   return next
+  //       .difference(DateTime(today.year, today.month, today.day))
+  //       .inDays;
+  // }
 
-  String _daysLabel(int days) {
-    if (days == 0) return 'Today!';
-    if (days == 1) return 'Tomorrow';
-    return '$days days';
-  }
+  // String _daysLabel(int days) {
+  //   if (days == 0) return 'Today!';
+  //   if (days == 1) return 'Tomorrow';
+  //   return '$days days';
+  // }
 
   void _openAddPopup() async {
     await showModalBottomSheet(
@@ -64,7 +66,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
       backgroundColor: Colors.transparent,
       builder: (_) => BirthdayDetailPopup(
         birthday: b,
-        daysUntil: _daysUntil(b.birthdate),
+        daysUntil: AppDateUtils.daysUntilBirthday(b.birthdate),
         onChanged: _load,
       ),
     );
@@ -75,7 +77,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
     final next = _birthdays.isNotEmpty ? _birthdays.first : null;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF0F7),
+      backgroundColor: AppColors.birthdayBackground,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,11 +92,11 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                     child: Container(
                       width: 36, height: 36,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF9C6E0),
+                        color: AppColors.birthdayIcon,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.chevron_left_rounded,
-                          color: Color(0xFFC4689A)),
+                          color: AppColors.birthdaySubtext),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -102,7 +104,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF8B2D5E),
+                        color: AppColors.birthdayText,
                       )),
                 ],
               ),
@@ -118,14 +120,14 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFF9C6E0)),
+                        border: Border.all(color: AppColors.birthdayIcon),
                       ),
                       child: Row(
                         children: [
                           Container(
                             width: 36, height: 36,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE91E8C),
+                              color: AppColors.birthdayPrimary,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(
@@ -140,15 +142,15 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                               const Text(
                                 'Next birthday',
                                 style: TextStyle(
-                                  fontSize: 11, color: Color(0xFFC4689A)
+                                  fontSize: 11, color: AppColors.birthdaySubtext
                                 )
                               ),
                               Text(
-                                '${next.name} — ${_daysLabel(_daysUntil(next.birthdate))}',
+                                '${next.name} — ${AppDateUtils.daysLabel(AppDateUtils.daysUntilBirthday(next.birthdate))}',
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
-                                  color: Color(0xFF8B2D5E),
+                                  color: AppColors.birthdayText,
                                 ),
                               ),
                             ],
@@ -166,7 +168,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                         'No birthdays yet!\nTap + to add one.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 15, color: Color(0xFFC4689A),
+                          fontSize: 15, color: AppColors.birthdaySubtext,
                         ),
                       ),
                     )
@@ -175,7 +177,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                       itemCount: _birthdays.length,
                       itemBuilder: (context, index) {
                         final b = _birthdays[index];
-                        final days = _daysUntil(b.birthdate);
+                        final days = AppDateUtils.daysUntilBirthday(b.birthdate);
                         final bday = DateTime.parse(b.birthdate);
                         final formatted =
                             DateFormat('MMM dd').format(bday);
@@ -188,14 +190,14 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(18),
-                              border: Border.all(color: const Color(0xFFF7D0E8)),
+                              border: Border.all(color: AppColors.birthdayBorder),
                             ),
                             child: Row(
                               children: [
                                 //Avatar
                                 CircleAvatar(
                                   radius: 23,
-                                  backgroundColor: const Color(0xFFF9C6E0),
+                                  backgroundColor: AppColors.birthdayIcon,
                                   backgroundImage: b.photoPath != null
                                       ? FileImage(File(b.photoPath!))
                                       : null,
@@ -203,7 +205,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                                       ? Text(
                                         b.name[0].toUpperCase(),
                                         style: const TextStyle(
-                                          color: Color(0xFF8B2D5E),
+                                          color: AppColors.birthdayText,
                                           fontWeight: FontWeight.w500,
                                           fontSize: 17,
                                         ),
@@ -222,14 +224,14 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                                           style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
-                                            color: Color(0xFF8B2D5E),
+                                            color: AppColors.birthdayText,
                                           )),
                                       const SizedBox(height: 3),
                                       Text(
                                         '${b.relationship} · $formatted',
                                         style: const TextStyle(
                                           fontSize: 11,
-                                          color: Color(0xFFC4689A),
+                                          color: AppColors.birthdaySubtext,
                                         ),
                                       ),
                                     ],
@@ -243,19 +245,19 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: days  == 0
-                                        ? const Color(0xFFF9C6E0)
+                                        ? AppColors.birthdayIcon
                                         : days <= 7
                                             ? const Color(0xFFF5DFB0)
                                             : const Color(0xFFE8D8F8),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
-                                    _daysLabel(days),
+                                    AppDateUtils.daysLabel(days),
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w500,
                                       color: days == 0
-                                          ? const Color(0xFF8B2D5E)
+                                          ? AppColors.birthdayText
                                           : days <= 7
                                               ? const Color(0xFF6B4200)
                                               : const Color(0xFF6A3BAF),
@@ -265,7 +267,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
                                 const SizedBox(width: 6),
                                 const Icon(
                                   Icons.chevron_right_rounded,
-                                  color: Color(0xFFF9C6E0), size: 16
+                                  color: AppColors.birthdayIcon, size: 16
                                 ),
                               ],
                             ),
@@ -281,7 +283,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
       // FAB
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddPopup,
-        backgroundColor: const Color(0xFFE91E8C),
+        backgroundColor: AppColors.birthdayPrimary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16)),
         child: const Icon(Icons.add_rounded, color: Colors.white),

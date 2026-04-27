@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../database/database_helper.dart';
+import 'package:memivo/core/constants/app_colors.dart';
+import '../../core/services/database_helper.dart';
 import '../../models/cafe_model.dart';
 import 'cafe_detail_popup.dart';
 import 'cafe_form_popup.dart';
@@ -108,7 +109,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
             Container(
               width: 40, height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFFF5DFB0),
+                color: AppColors.cafeBorder,
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -117,7 +118,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF6B4200),
+                  color: AppColors.cafeText,
                 )),
             const SizedBox(height: 12),
             ..._filterOptions.map((option) {
@@ -133,12 +134,12 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? const Color(0xFFFFF3E0)
-                        : const Color(0xFFFFF8EE),
+                        : AppColors.cafeBackground,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected
-                          ? const Color(0xFFBA7517)
-                          : const Color(0xFFF5DFB0),
+                          ? AppColors.cafePrimary
+                          : AppColors.cafeBorder,
                       width: isSelected ? 1.5 : 1,
                     ),
                   ),
@@ -150,8 +151,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                           ? FontWeight.w600
                           : FontWeight.normal,
                       color: isSelected
-                          ? const Color(0xFFBA7517)
-                          : const Color(0xFF6B4200),
+                          ? AppColors.cafePrimary
+                          : AppColors.cafeText,
                     ),
                   ),
                 ),
@@ -169,7 +170,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
     final isFiltered = _selectedFilter != 'All';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF8EE),
+      backgroundColor: AppColors.cafeBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -184,11 +185,11 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                     child: Container(
                       width: 36, height: 36,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF5DFB0),
+                        color: AppColors.cafeBorder,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.chevron_left_rounded,
-                          color: Color(0xFFB07A30)),
+                          color: AppColors.cafeSubtext),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -196,7 +197,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
-                        color: Color(0xFF6B4200),
+                        color: AppColors.cafeText,
                       )),
                 ],
               ),
@@ -211,21 +212,21 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFF5DFB0)),
+                  border: Border.all(color: AppColors.cafeBorder),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _statItem('${_filtered.length}', 'Total'),
                     Container(width: 0.5, height: 28,
-                        color: const Color(0xFFF5DFB0)),
+                        color: AppColors.cafeBorder),
                     _statItem(
                         _filtered.isEmpty
                             ? '—'
                             : '${_avgRating.toStringAsFixed(1)} ⭐',
                         'Avg Rating'),
                     Container(width: 0.5, height: 28,
-                        color: const Color(0xFFF5DFB0)),
+                        color: AppColors.cafeBorder),
                     _statItem(
                         _avgPrice == 0 ? '—' : '₱${_avgPrice.toStringAsFixed(0)}',
                         'Avg Price'),
@@ -249,8 +250,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isFiltered
-                          ? const Color(0xFFBA7517)
-                          : const Color(0xFFF5DFB0),
+                          ? AppColors.cafePrimary
+                          : AppColors.cafeBorder,
                       width: isFiltered ? 1.5 : 1,
                     ),
                   ),
@@ -259,8 +260,8 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                       Icon(Icons.filter_list_rounded,
                           size: 16,
                           color: isFiltered
-                              ? const Color(0xFFBA7517)
-                              : const Color(0xFFB07A30)),
+                              ? AppColors.cafePrimary
+                              : AppColors.cafeSubtext),
                       const SizedBox(width: 8),
                       Text(
                         _selectedFilter == 'All'
@@ -272,15 +273,15 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                               ? FontWeight.w600
                               : FontWeight.normal,
                           color: isFiltered
-                              ? const Color(0xFFBA7517)
-                              : const Color(0xFF6B4200),
+                              ? AppColors.cafePrimary
+                              : AppColors.cafeText,
                         ),
                       ),
                       const Spacer(),
                       Icon(Icons.keyboard_arrow_down_rounded,
                           color: isFiltered
-                              ? const Color(0xFFBA7517)
-                              : const Color(0xFFB07A30)),
+                              ? AppColors.cafePrimary
+                              : AppColors.cafeSubtext),
                     ],
                   ),
                 ),
@@ -297,7 +298,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                             : 'No $_selectedFilter entries yet!',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                            fontSize: 15, color: Color(0xFFB07A30)),
+                            fontSize: 15, color: AppColors.cafeSubtext),
                       ),
                     )
                   : ListView.builder(
@@ -314,7 +315,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                  color: const Color(0xFFF5DFB0)),
+                                  color: AppColors.cafeBorder),
                             ),
                             child: Row(
                               children: [
@@ -322,7 +323,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                                 Container(
                                   width: 48, height: 48,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFF5DFB0),
+                                    color: AppColors.cafeBorder,
                                     borderRadius: BorderRadius.circular(14),
                                   ),
                                   clipBehavior: Clip.antiAlias,
@@ -351,19 +352,19 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                                           style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w500,
-                                            color: Color(0xFF6B4200),
+                                            color: AppColors.cafeText,
                                           )),
                                       const SizedBox(height: 2),
                                       Text(c.cafeName,
                                           style: const TextStyle(
                                             fontSize: 11,
-                                            color: Color(0xFFB07A30),
+                                            color: AppColors.cafeSubtext,
                                           )),
                                       Text(
                                         '${_drinkEmoji[c.drinkType] ?? '☕'} ${c.drinkType}',
                                         style: const TextStyle(
                                           fontSize: 11,
-                                          color: Color(0xFFB07A30),
+                                          color: AppColors.cafeSubtext,
                                         ),
                                       ),
                                     ],
@@ -386,7 +387,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                                           : '—',
                                       style: const TextStyle(
                                         fontSize: 11,
-                                        color: Color(0xFFB07A30),
+                                        color: AppColors.cafeSubtext,
                                       ),
                                     ),
                                   ],
@@ -394,7 +395,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
                                 const SizedBox(width: 6),
                                 const Icon(
                                     Icons.chevron_right_rounded,
-                                    color: Color(0xFFF5DFB0),
+                                    color: AppColors.cafeBorder,
                                     size: 16),
                               ],
                             ),
@@ -408,7 +409,7 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddPopup,
-        backgroundColor: const Color(0xFFBA7517),
+        backgroundColor: AppColors.cafePrimary,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16)),
         child: const Icon(Icons.add_rounded, color: Colors.white),
@@ -423,11 +424,11 @@ class _CoffeeScreenState extends State<CoffeeScreen> {
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF6B4200),
+              color: AppColors.cafeSubtext,
             )),
         Text(label,
             style: const TextStyle(
-                fontSize: 10, color: Color(0xFFB07A30))),
+                fontSize: 10, color: AppColors.cafeSubtext)),
       ],
     );
   }

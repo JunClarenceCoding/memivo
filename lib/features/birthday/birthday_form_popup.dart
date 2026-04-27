@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../database/database_helper.dart';
+import 'package:memivo/core/constants/app_colors.dart';
+import '../../core/services/database_helper.dart';
 import '../../models/birthday_model.dart';
 
 class BirthdayFormPopup extends StatefulWidget {
@@ -109,7 +110,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
               Container(
                 width: 40, height: 4,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF9C6E0),
+                  color: AppColors.birthdayIcon,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -120,7 +121,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF8B2D5E),
+                  color: AppColors.birthdayText,
                 ),
               ),
               const SizedBox(height: 16,),
@@ -130,13 +131,13 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                 onTap: _pickPhoto,
                 child: CircleAvatar(
                   radius: 34,
-                  backgroundColor: const Color(0xFFF9C6E0),
+                  backgroundColor: AppColors.birthdayIcon,
                   backgroundImage: _photoPath != null
                       ? FileImage(File(_photoPath!))
                       : null,
                   child:  _photoPath == null
                       ? const Icon(Icons.camera_alt_rounded,
-                          color: Color(0xFFC4689A), size: 26,)
+                          color: AppColors.birthdaySubtext, size: 26,)
                       : null,
                 ),
               ),
@@ -144,7 +145,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
               const Text(
                 'Tap to add photo',
                 style: TextStyle(
-                  fontSize: 11, color:  Color(0xFFC4689A)
+                  fontSize: 11, color:  AppColors.birthdaySubtext
                 ),
               ),
               const SizedBox(height: 16,),
@@ -155,7 +156,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                 child: TextField(
                   controller: _nameController,
                   style: const TextStyle(
-                    fontSize: 13, color:  Color(0xFF8B2D5E)
+                    fontSize: 13, color:  AppColors.birthdayText
                   ),
                   decoration: _inputDecoration('Enter name...'),
                 ),
@@ -171,7 +172,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                       child: DropdownButtonFormField<String>(
                         value: _relationship,
                         style: const TextStyle(
-                          fontSize: 13, color: Color(0xFF8B2D5E)
+                          fontSize: 13, color: AppColors.birthdayText
                         ),
                         decoration: _inputDecoration(null),
                         items: _relationships
@@ -194,9 +195,9 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                             horizontal: 12, vertical: 12
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFFF0F7),
+                            color: AppColors.birthdayBackground,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: const Color(0xFFF7D0E8)),
+                            border: Border.all(color: AppColors.birthdayBorder),
                           ),
                           child: Row(
                             children: [
@@ -209,15 +210,15 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: _selectedDate == null
-                                        ? const Color(0xFFC4689A)
-                                        : const Color(0xFF8B2D5E),
+                                        ? AppColors.birthdaySubtext
+                                        : AppColors.birthdayText,
                                   ),
                                 ),
                               ),
                               const Icon(
                                 Icons.calendar_today_rounded,
                                 size: 14,
-                                color: Color(0xFFC4689A),
+                                color: AppColors.birthdaySubtext,
                               ),
                             ],
                           ),
@@ -236,7 +237,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                   controller: _notesController,
                   maxLines: 2,
                   style: const TextStyle(
-                    fontSize: 13, color:  Color(0xFF8B2D5E)
+                    fontSize: 13, color:  AppColors.birthdayText
                   ),
                   decoration: _inputDecoration('Optional notes...'),
                 ),
@@ -249,12 +250,12 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                     horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: _errorMessage != null
-                      ? const Color(0xFFFCEBEB)
+                      ? AppColors.deleteBackground
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: _errorMessage != null
-                        ? const Color(0xFFE24B4A)
+                        ? AppColors.errorBorder
                         : Colors.transparent,
                   ),
                 ),
@@ -262,7 +263,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                   children: [
                     Icon(Icons.info_rounded,
                         color: _errorMessage != null
-                            ? const Color(0xFFA32D2D)
+                            ? AppColors.deleteText
                             : Colors.transparent,
                         size: 15),
                     const SizedBox(width: 8),
@@ -272,7 +273,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                         style: TextStyle(
                           fontSize: 12,
                           color: _errorMessage != null
-                              ? const Color(0xFFA32D2D)
+                              ? AppColors.deleteText
                               : Colors.transparent,
                         ),
                       ),
@@ -290,7 +291,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE91E8C),
+                    color: AppColors.birthdayPrimary,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Center(
@@ -319,7 +320,7 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 11, color:  Color(0xFFC4689A)
+            fontSize: 11, color:  AppColors.birthdaySubtext
           ),
         ),
         const SizedBox(height: 4,),
@@ -332,22 +333,22 @@ class _BirthdayFormPopupState extends State<BirthdayFormPopup> {
     return InputDecoration(
       hintText: hint,
       hintStyle: 
-          const TextStyle(fontSize: 13, color: Color(0xFFC4689A)),
+          const TextStyle(fontSize: 13, color: AppColors.birthdaySubtext),
       filled: true,
-      fillColor: const Color(0xFFFFF0F7),
+      fillColor: AppColors.birthdayBackground,
       contentPadding: 
           const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFF7D0E8)),
+        borderSide: const BorderSide(color: AppColors.birthdayBorder),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFF7D0E8)),
+        borderSide: const BorderSide(color: AppColors.birthdayBorder),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFE91E8C)),
+        borderSide: const BorderSide(color: AppColors.birthdayPrimary),
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'birthday/birthday_screen.dart';
-import 'todo/todo_screen.dart';
-import 'coffee/coffee_screen.dart';
+import 'package:memivo/routes/app_routes.dart';
+import 'package:memivo/widgets/feature_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,7 +25,7 @@ class HomeScreen extends StatelessWidget {
                       color: const Color(0xFFFAF6FF),
                     ),
                     child: Image.asset(
-                      'images/memivo_logo.png',
+                      'assets/images/memivo_logo.png',
                     )
                   ),
                   const SizedBox(width: 3),
@@ -54,7 +53,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 42,),
 
               //Feature Cards
-              _FeatureCard(
+              FeatureCard(
                 title: 'Birthday Reminder',
                 subtitle: 'Never forget a birthday',
                 icon: Icons.cake_rounded,
@@ -64,13 +63,10 @@ class HomeScreen extends StatelessWidget {
                 iconColor: const Color(0xFFC4689A),
                 titleColor: const Color(0xFF8B2D5E),
                 subtitleColor: const Color(0xFFC4689A),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const BirthdayScreen())
-                ),
+                onTap: () => Navigator.pushNamed(context, AppRoutes.birthday),
               ),
 
-              _FeatureCard(
+              FeatureCard(
                 title: 'To-Do List',
                 subtitle: 'Stay on top of your tasks',
                 icon: Icons.checklist_rounded,
@@ -80,13 +76,10 @@ class HomeScreen extends StatelessWidget {
                 iconColor: const Color(0xFF5A9E67),
                 titleColor: const Color(0xFF2A5E35),
                 subtitleColor: const Color(0xFF5A9E67),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const TodoScreen())
-                ),
+                onTap: () => Navigator.pushNamed(context, AppRoutes.todo),
               ),
 
-              _FeatureCard(
+              FeatureCard(
                 title: 'Cafe Journal',
                 subtitle: 'Log your cafe drinks',
                 icon: Icons.local_cafe_rounded,
@@ -96,92 +89,12 @@ class HomeScreen extends StatelessWidget {
                 iconColor: const Color(0xFFB07A30),
                 titleColor: const Color(0xFF6B4200),
                 subtitleColor: const Color(0xFFB07A30),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const CoffeeScreen())
-                ),
+                onTap: () => Navigator.pushNamed(context, AppRoutes.cafe),
               ),
             ],
           ),
         )
       )
-    );
-  }
-}
-
-class _FeatureCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-  final Color backgroundColor;
-  final Color borderColor;
-  final Color iconBackground;
-  final Color iconColor;
-  final Color titleColor;
-  final Color subtitleColor;
-  final VoidCallback onTap;
-
-  const _FeatureCard({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-    required this.backgroundColor,
-    required this.borderColor,
-    required this.iconBackground,
-    required this.iconColor,
-    required this.titleColor,
-    required this.subtitleColor,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 13),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          border: Border.all(color: borderColor),
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 62, height: 62,
-              decoration: BoxDecoration(
-                color: iconBackground,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, color: iconColor, size: 28,),
-            ),
-            const SizedBox(width: 15,),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.w500,
-                    color: titleColor,
-                  ),
-                ),
-                const SizedBox(height: 3,),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 15, color: subtitleColor
-                  ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Icon(Icons.chevron_right_rounded, color: subtitleColor, size: 20,),
-          ],
-        ),
-      ),
     );
   }
 }

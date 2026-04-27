@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import '../models/birthday_model.dart';
-import '../models/todo_model.dart';
-import '../models/cafe_model.dart';
+import '../../models/birthday_model.dart';
+import '../../models/todo_model.dart';
+import '../../models/cafe_model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -19,7 +19,7 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 3, onCreate: _createDB, onUpgrade: _upgradeDB);
+    return await openDatabase(path, version: 2, onCreate: _createDB, onUpgrade: _upgradeDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -69,9 +69,6 @@ class DatabaseHelper {
           dueDate TEXT
         )
       ''');
-    }
-
-    if (oldVersion < 3) {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS cafes (
           id INTEGER PRIMARY KEY AUTOINCREMENT,

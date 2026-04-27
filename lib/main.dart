@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'routes/app_routes.dart';
 
 void main() {
   runApp(const MemivoApp());
@@ -16,9 +16,9 @@ class MemivoApp extends StatelessWidget {
       theme: ThemeData(
         colorSchemeSeed: const Color(0xFF6A3BAF),
         useMaterial3: true,
-        fontFamily: 'Nunitu'
       ),
-      home: const HomeScreen(),
+      initialRoute: AppRoutes.home,
+      routes: AppRoutes.routes,
     );
   }
 }
