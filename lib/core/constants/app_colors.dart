@@ -26,6 +26,18 @@ class AppColors {
   static const cafeText = Color(0xFF6B4200);
   static const cafeSubtext = Color(0xFFB07A30);
 
+  //Budget Splitter
+  // static const budgetPrimary = 
+  static const budgetBackground = Color(0xFFF3F1FE);
+  static const budgetColor1 = Color(0xFFCECBF6);
+  static const budgetColor2 = Color(0xFF534AB7);
+  static const budgetColor3 = Color(0xFF26215C);
+  static const budgetColor4 = Color(0xFFAFA9EC);
+  static const budgetColor5 = Color(0xFFE24B4A);
+  static const budgetColor6 = Color(0xFFEEEDFE);
+  static const budgetColor7 = Color(0xFF26215C);
+  static const budgetColor8 = Color(0xFF534AB7);
+
   // Common
   static const deleteBackground = Color(0xFFFCEBEB);
   static const deleteText = Color(0xFFA32D2D);

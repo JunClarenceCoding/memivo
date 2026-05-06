@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
                       color: const Color(0xFFFAF6FF),
                     ),
                     child: Image.asset(
-                      'assets/images/memivo_logo.png',
+                      'assets/images/memivo_logo_v2.png',
                     )
                   ),
                   const SizedBox(width: 3),
@@ -90,6 +90,19 @@ class HomeScreen extends StatelessWidget {
                 titleColor: const Color(0xFF6B4200),
                 subtitleColor: const Color(0xFFB07A30),
                 onTap: () => Navigator.pushNamed(context, AppRoutes.cafe),
+              ),
+
+              FeatureCard(
+                title: 'Budget Splitter',
+                subtitle: 'Split expenses with friends',
+                icon: Icons.account_balance_wallet_rounded,
+                backgroundColor: const Color(0xFFF3F1FE),
+                borderColor: const Color(0xFFAFA9EC),
+                iconBackground: const Color(0xFFCECBF6),
+                iconColor: const Color(0xFF534AB7),
+                titleColor: const Color(0xFF26215C),
+                subtitleColor: const Color(0xFF534AB7),
+                onTap: () => Navigator.pushNamed(context, AppRoutes.budget),
               ),
             ],
           ),

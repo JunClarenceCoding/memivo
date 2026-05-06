@@ -3,6 +3,9 @@ import 'package:path/path.dart';
 import '../../models/birthday_model.dart';
 import '../../models/todo_model.dart';
 import '../../models/cafe_model.dart';
+import '../../models/occasion_model.dart';
+import '../../models/expense_model.dart';
+import '../../models/participant_model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -19,7 +22,7 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    return await openDatabase(path, version: 2, onCreate: _createDB, onUpgrade: _upgradeDB);
+    return await openDatabase(path, version: 3, onCreate: _createDB, onUpgrade: _upgradeDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -56,6 +59,35 @@ class DatabaseHelper {
         photoPath TEXT
       )
     ''');
+    await db.execute('''
+      CREATE TABLE occasions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        date TEXT,
+        notes TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE expenses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        occasionId INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        totalAmount REAL NOT NULL,
+        splitMode TEXT NOT NULL,
+        FOREIGN KEY (occasionId) REFERENCES occasions(id)
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE participants (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        expenseId INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        amountOwed REAL NOT NULL,
+        paidAtCounter REAL NOT NULL,
+        paidBack REAL NOT NULL,
+        FOREIGN KEY (expenseId) REFERENCES expenses(id)
+      )
+    ''');
   }
 
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
@@ -81,6 +113,37 @@ class DatabaseHelper {
           location TEXT,
           notes TEXT,
           photoPath TEXT
+        )
+      ''');
+    }
+    if(oldVersion < 3) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS occasions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          date TEXT,
+          notes TEXT
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS expenses (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          occasionId INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          totalAmount REAL NOT NULL,
+          splitMode TEXT NOT NULL,
+          FOREIGN KEY (occasionId) REFERENCES occasions(id)
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS participants (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          expenseId INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          amountOwed REAL NOT NULL,
+          paidAtCounter REAL NOT NULL,
+          paidBack REAL NOT NULL,
+          FOREIGN KEY (expenseId) REFERENCES expenses(id)
         )
       ''');
     }
@@ -185,6 +248,93 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  //-----------Occasion CRUD--------------
+
+  Future<int> insertOccasion(Occasion o) async {
+    final db = await instance.database;
+    return await db.insert('occasions', o.toMap());
+  }
+
+  Future<List<Occasion>> getAllOccasions() async {
+    final db = await instance.database;
+    final result =
+        await db.query('occasions', orderBy: 'id DESC');
+    return result.map((map) => Occasion.fromMap(map)).toList();
+  }
+
+  Future<int> updateOccasion(Occasion o) async {
+    final db = await instance.database;
+    return await db.update('occasions', o.toMap(),
+        where: 'id = ?', whereArgs: [o.id]);
+  }
+
+  Future<int> deleteOccasion(int id) async {
+    final db = await instance.database;
+    // delete all expenses and participants under this occasion
+    final expenses = await getExpensesByOccasion(id);
+    for (final e in expenses) {
+      await deleteExpense(e.id!);
+    }
+    return await db.delete('occasions',
+        where: 'id = ?', whereArgs: [id]);
+  }
+
+  //-------------EXPENSE CRUD---------------
+
+  Future<int> insertExpense(Expense e) async {
+    final db = await instance.database;
+    return await db.insert('expenses', e.toMap());
+  }
+
+  Future<List<Expense>> getExpensesByOccasion(int occasionId) async {
+    final db = await instance.database;
+    final result = await db.query('expenses',
+        where: 'occasionId = ?', whereArgs: [occasionId]);
+    return result.map((map) => Expense.fromMap(map)).toList();
+  }
+
+  Future<int> updateExpense(Expense e) async {
+    final db = await instance.database;
+    return await db.update('expenses', e.toMap(),
+        where: 'id = ?', whereArgs: [e.id]);
+  }
+
+  Future<int> deleteExpense(int id) async {
+    final db = await instance.database;
+    // delete all participants under this expense
+    await db.delete('participants',
+        where: 'expenseId = ?', whereArgs: [id]);
+    return await db.delete('expenses',
+        where: 'id = ?', whereArgs: [id]);
+  }
+
+  //-------------Participant CRUD---------------------
+
+  Future<int> insertParticipant(Participant p) async {
+    final db = await instance.database;
+    return await db.insert('participants', p.toMap());
+  }
+
+  Future<List<Participant>> getParticipantsByExpense(
+      int expenseId) async {
+    final db = await instance.database;
+    final result = await db.query('participants',
+        where: 'expenseId = ?', whereArgs: [expenseId]);
+    return result.map((map) => Participant.fromMap(map)).toList();
+  }
+
+  Future<int> updateParticipant(Participant p) async {
+    final db = await instance.database;
+    return await db.update('participants', p.toMap(),
+        where: 'id = ?', whereArgs: [p.id]);
+  }
+
+  Future<int> deleteParticipant(int id) async {
+    final db = await instance.database;
+    return await db.delete('participants',
+        where: 'id = ?', whereArgs: [id]);
   }
 
   Future close() async {
