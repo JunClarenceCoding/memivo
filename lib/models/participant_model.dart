@@ -4,7 +4,7 @@ class Participant {
   String name;
   double amountOwed;
   double paidAtCounter;
-  double paidBack;
+  double paidBack; 
 
   Participant({
     this.id,
@@ -12,19 +12,17 @@ class Participant {
     required this.name,
     required this.amountOwed,
     required this.paidAtCounter,
-    required this.paidBack,
+    this.paidBack = 0, 
   });
 
-  // Auto status
   String get status {
-    final balance = paidAtCounter + paidBack - amountOwed;
-    if (balance >= 0) return 'Already Paid';
-    if (paidAtCounter > 0 || paidBack > 0) return 'Partial';
+    final total = paidAtCounter + paidBack;
+    if (total >= amountOwed - 0.01) return 'Already Paid';
+    if (total > 0) return 'Partial';
     return 'Unpaid';
   }
 
-  // Net balance — positive means others owe them
-  double get balance => paidAtCounter - amountOwed + paidBack;
+  double get balance => paidAtCounter + paidBack - amountOwed;
 
   Map<String, dynamic> toMap() {
     return {
@@ -44,7 +42,7 @@ class Participant {
       name: map['name'],
       amountOwed: map['amountOwed'],
       paidAtCounter: map['paidAtCounter'],
-      paidBack: map['paidBack'],
+      paidBack: map['paidBack'] ?? 0,
     );
   }
 }

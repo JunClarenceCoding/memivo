@@ -6,6 +6,7 @@ import '../../models/participant_model.dart';
 import 'expense_form_screen.dart';
 import 'expense_detail_screen.dart';
 import 'occasion_form_screen.dart';
+import '../../models/payment_model.dart';
 
 class OccasionDetailScreen extends StatefulWidget {
   final Occasion occasion;
@@ -20,6 +21,7 @@ class OccasionDetailScreen extends StatefulWidget {
 class _OccasionDetailScreenState extends State<OccasionDetailScreen> {
   List<Expense> _expenses = [];
   Map<int, List<Participant>> _participantMap = {};
+  Map<int, List<Payment>> _paymentMap = {};
 
   @override
   void initState() {
@@ -28,18 +30,24 @@ class _OccasionDetailScreenState extends State<OccasionDetailScreen> {
   }
 
   Future<void> _load() async {
-    final expenses = await DatabaseHelper.instance
-        .getExpensesByOccasion(widget.occasion.id!);
-    final participantMap = <int, List<Participant>>{};
-    for (final e in expenses) {
-      participantMap[e.id!] = await DatabaseHelper.instance
-          .getParticipantsByExpense(e.id!);
-    }
-    setState(() {
-      _expenses = expenses;
-      _participantMap = participantMap;
-    });
+  final expenses = await DatabaseHelper.instance
+      .getExpensesByOccasion(widget.occasion.id!);
+  final participantMap = <int, List<Participant>>{};
+  final paymentMap = <int, List<Payment>>{}; // ✅ add
+
+  for (final e in expenses) {
+    participantMap[e.id!] = await DatabaseHelper.instance
+        .getParticipantsByExpense(e.id!);
+    paymentMap[e.id!] = await DatabaseHelper.instance  // ✅ add
+        .getPaymentsByExpense(e.id!);
   }
+
+  setState(() {
+    _expenses = expenses;
+    _participantMap = participantMap;
+    _paymentMap = paymentMap; // ✅ add
+  });
+}
 
   double get _totalAmount =>
       _expenses.fold(0, (sum, e) => sum + e.totalAmount);
@@ -80,64 +88,75 @@ double get _remaining {
 
   // Settlement calculation
   List<Map<String, dynamic>> _calculateSettlements() {
-  final Map<String, double> balances = {};
+    final Map<String, double> balances = {};
 
-  for (final e in _expenses) {
-    final participants = _participantMap[e.id!] ?? [];
-    for (final p in participants) {
-      // balance = what they paid at counter - what they owe
-      // paidBack reduces what they still owe
-      final net = p.paidAtCounter + p.paidBack - p.amountOwed;
-      balances[p.name] = (balances[p.name] ?? 0) + net;
-    }
-  }
-
-  // Creditors → positive balance (others owe them)
-  // Debtors   → negative balance (they owe others)
-  final creditors = balances.entries
-      .where((e) => e.value > 0.01)
-      .map((e) => {'name': e.key, 'amount': e.value})
-      .toList()
-    ..sort((a, b) =>
-        (b['amount'] as double).compareTo(a['amount'] as double));
-
-  final debtors = balances.entries
-      .where((e) => e.value < -0.01)
-      .map((e) => {'name': e.key, 'amount': -(e.value)})
-      .toList()
-    ..sort((a, b) =>
-        (b['amount'] as double).compareTo(a['amount'] as double));
-
-  final settlements = <Map<String, dynamic>>[];
-
-  int i = 0, j = 0;
-  while (i < debtors.length && j < creditors.length) {
-    final debtorName = debtors[i]['name'] as String;
-    final creditorName = creditors[j]['name'] as String;
-    double debtorAmount = debtors[i]['amount'] as double;
-    double creditorAmount = creditors[j]['amount'] as double;
-
-    final amount = debtorAmount < creditorAmount
-        ? debtorAmount
-        : creditorAmount;
-
-    if (amount > 0.01) {
-      settlements.add({
-        'from': debtorName,
-        'to': creditorName,
-        'amount': amount,
-      });
+    // Step 1 — calculate base balances from participants
+    for (final e in _expenses) {
+      final participants = _participantMap[e.id!] ?? [];
+      for (final p in participants) {
+        final net = p.paidAtCounter - p.amountOwed;
+        balances[p.name] = (balances[p.name] ?? 0) + net;
+      }
     }
 
-    debtors[i]['amount'] = debtorAmount - amount;
-    creditors[j]['amount'] = creditorAmount - amount;
+    // Step 2 — adjust balances based on actual payments made
+    for (final e in _expenses) {
+      final payments = _paymentMap[e.id!] ?? [];
+      for (final payment in payments) {
+        // fromPerson paid toPerson → fromPerson's debt reduces
+        // toPerson received money → their credit reduces
+        balances[payment.fromPerson] =
+            (balances[payment.fromPerson] ?? 0) + payment.amount;
+        balances[payment.toPerson] =
+            (balances[payment.toPerson] ?? 0) - payment.amount;
+      }
+    }
 
-    if ((debtors[i]['amount'] as double) < 0.01) i++;
-    if ((creditors[j]['amount'] as double) < 0.01) j++;
+    // Step 3 — calculate settlements from remaining balances
+    final creditors = balances.entries
+        .where((e) => e.value > 0.01)
+        .map((e) => {'name': e.key, 'amount': e.value})
+        .toList()
+      ..sort((a, b) =>
+          (a['name'] as String).compareTo(b['name'] as String));
+
+    final debtors = balances.entries
+        .where((e) => e.value < -0.01)
+        .map((e) => {'name': e.key, 'amount': -(e.value)})
+        .toList()
+      ..sort((a, b) =>
+          (a['name'] as String).compareTo(b['name'] as String));
+
+    final settlements = <Map<String, dynamic>>[];
+
+    int i = 0, j = 0;
+    while (i < debtors.length && j < creditors.length) {
+      final debtorName = debtors[i]['name'] as String;
+      final creditorName = creditors[j]['name'] as String;
+      double debtorAmount = debtors[i]['amount'] as double;
+      double creditorAmount = creditors[j]['amount'] as double;
+
+      final amount = debtorAmount < creditorAmount
+          ? debtorAmount
+          : creditorAmount;
+
+      if (amount > 0.01) {
+        settlements.add({
+          'from': debtorName,
+          'to': creditorName,
+          'amount': amount,
+        });
+      }
+
+      debtors[i]['amount'] = debtorAmount - amount;
+      creditors[j]['amount'] = creditorAmount - amount;
+
+      if ((debtors[i]['amount'] as double) < 0.01) i++;
+      if ((creditors[j]['amount'] as double) < 0.01) j++;
+    }
+
+    return settlements;
   }
-
-  return settlements;
-}
 
   Future<void> _deleteOccasion() async {
     final confirmed = await showDialog<bool>(

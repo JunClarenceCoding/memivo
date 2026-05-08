@@ -6,6 +6,7 @@ import '../../models/cafe_model.dart';
 import '../../models/occasion_model.dart';
 import '../../models/expense_model.dart';
 import '../../models/participant_model.dart';
+import '../../models/payment_model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -88,6 +89,16 @@ class DatabaseHelper {
         FOREIGN KEY (expenseId) REFERENCES expenses(id)
       )
     ''');
+    await db.execute('''
+      CREATE TABLE payments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        expenseId INTEGER NOT NULL,
+        fromPerson TEXT NOT NULL,
+        toPerson TEXT NOT NULL,
+        amount REAL NOT NULL,
+        FOREIGN KEY (expenseId) REFERENCES expenses(id)
+      )
+    ''');
   }
 
   Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
@@ -143,6 +154,16 @@ class DatabaseHelper {
           amountOwed REAL NOT NULL,
           paidAtCounter REAL NOT NULL,
           paidBack REAL NOT NULL,
+          FOREIGN KEY (expenseId) REFERENCES expenses(id)
+        )
+      ''');
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS payments (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          expenseId INTEGER NOT NULL,
+          fromPerson TEXT NOT NULL,
+          toPerson TEXT NOT NULL,
+          amount REAL NOT NULL,
           FOREIGN KEY (expenseId) REFERENCES expenses(id)
         )
       ''');
@@ -302,13 +323,14 @@ class DatabaseHelper {
   }
 
   Future<int> deleteExpense(int id) async {
-    final db = await instance.database;
-    // delete all participants under this expense
-    await db.delete('participants',
-        where: 'expenseId = ?', whereArgs: [id]);
-    return await db.delete('expenses',
-        where: 'id = ?', whereArgs: [id]);
-  }
+  final db = await instance.database;
+  await db.delete('participants',
+      where: 'expenseId = ?', whereArgs: [id]);
+  await db.delete('payments',           // ✅ add this
+      where: 'expenseId = ?', whereArgs: [id]);
+  return await db.delete('expenses',
+      where: 'id = ?', whereArgs: [id]);
+}
 
   //-------------Participant CRUD---------------------
 
@@ -334,6 +356,31 @@ class DatabaseHelper {
   Future<int> deleteParticipant(int id) async {
     final db = await instance.database;
     return await db.delete('participants',
+        where: 'id = ?', whereArgs: [id]);
+  }
+
+  //--------------Payment CRUD-------------
+  Future<int> insertPayment(Payment p) async {
+    final db = await instance.database;
+    return await db.insert('payments', p.toMap());
+  }
+
+  Future<List<Payment>> getPaymentsByExpense(int expenseId) async {
+    final db = await instance.database;
+    final result = await db.query('payments',
+        where: 'expenseId = ?', whereArgs: [expenseId]);
+    return result.map((map) => Payment.fromMap(map)).toList();
+  }
+
+  Future<int> deletePaymentsByExpense(int expenseId) async {
+    final db = await instance.database;
+    return await db.delete('payments',
+        where: 'expenseId = ?', whereArgs: [expenseId]);
+  }
+
+  Future<int> deletePayment(int id) async {
+    final db = await instance.database;
+    return await db.delete('payments',
         where: 'id = ?', whereArgs: [id]);
   }
 

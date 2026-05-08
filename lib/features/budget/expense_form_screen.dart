@@ -42,7 +42,32 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
       _totalController.text =
           widget.expense!.totalAmount.toStringAsFixed(0);
       _splitMode = widget.expense!.splitMode;
+      _loadExistingParticipants();
     }
+  }
+
+  // ✅ Add this new method
+  Future<void> _loadExistingParticipants() async {
+    final participants = await DatabaseHelper.instance
+        .getParticipantsByExpense(widget.expense!.id!);
+
+    setState(() {
+      for (final p in participants) {
+        if (p.paidAtCounter > 0) {
+          // This person is a payer
+          _payers.add({
+            'name': p.name,
+            'amount': p.paidAtCounter,
+          });
+        }
+        // Everyone is in split people
+        if (p.amountOwed > 0) {
+          if (!_splitPeople.contains(p.name)) {
+            _splitPeople.add(p.name);
+          }
+        }
+      }
+    });
   }
 
   void _addPayer() {
