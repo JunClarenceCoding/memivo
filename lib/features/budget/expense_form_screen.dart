@@ -146,18 +146,21 @@ if ((payersTotal - totalAmount).abs() > 0.01) {
 
   int expenseId;
   if (_isEditing) {
-    await DatabaseHelper.instance.updateExpense(expense);
-    expenseId = widget.expense!.id!;
-    // Delete old participants so we start fresh
-    final old = await DatabaseHelper.instance
-        .getParticipantsByExpense(expenseId);
-    for (final p in old) {
-      await DatabaseHelper.instance.deleteParticipant(p.id!);
-    }
-  } else {
-    expenseId =
-        await DatabaseHelper.instance.insertExpense(expense);
+  await DatabaseHelper.instance.updateExpense(expense);
+  expenseId = widget.expense!.id!;
+  // ✅ Delete old participants
+  final old = await DatabaseHelper.instance
+      .getParticipantsByExpense(expenseId);
+  for (final p in old) {
+    await DatabaseHelper.instance.deleteParticipant(p.id!);
   }
+  // ✅ Delete old payments too — amounts changed so settlements reset
+  await DatabaseHelper.instance
+      .deletePaymentsByExpense(expenseId);
+} else {
+  expenseId =
+      await DatabaseHelper.instance.insertExpense(expense);
+}
 
   // Save payers first
   for (final payer in _payers) {
